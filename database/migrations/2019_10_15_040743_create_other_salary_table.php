@@ -16,9 +16,10 @@ class CreateOtherSalaryTable extends Migration
         Schema::create('other_salary', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('type');
+            $table->integer('employee_id');
+            $table->integer('folder_id');
             $table->string('detail');
             $table->float('amount');
-            $table->string('note');
             $table->timestamps();
         });
     }

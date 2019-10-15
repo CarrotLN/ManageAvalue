@@ -95,7 +95,9 @@
                         <td class="list-detailsalary">
                             {{$folder_salary->sum_salary}}
                         </td>
-                        <td class="list-detailsalary"></td>
+                        <td class="list-detailsalary">
+{{--                            {{$folder_salary->sum_increase}}--}}
+                        </td>
                         <td class="list-detailsalary">
                             ({{$folder_salary->sum_reduce}})
                         </td>

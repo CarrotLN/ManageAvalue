@@ -39,4 +39,7 @@ class Employee extends Model
     {
         return $this->belongsTo('App\Model\EmployeeSalary', 'id', 'employee_id');
     }
+    public function otherSalary(){
+        return $this->belongsTo(OtherSalary::class,"employee_id","id");
+    }
 }

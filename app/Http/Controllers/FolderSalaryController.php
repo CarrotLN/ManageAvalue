@@ -48,6 +48,8 @@ class FolderSalaryController extends Controller
 
     public function store(Request $request)
     {
+
+
         $request->validate([
             'month' => 'required',
             'year' => 'required',
@@ -158,14 +160,14 @@ class FolderSalaryController extends Controller
         return view('salarys.list', $data);
     }
 
-    public function salaryEdit(Request $request, $id)
+    public function salaryDetail(Request $request, $id)
     {
-
+        //dd($request);
         $folder_salaries = FolderSalary::with('employee')
             ->where('id', $id)
             ->get();
 
-        $salaryDetail = SalaryDetail::with(['employee.bank'])
+        $salaryDetail = SalaryDetail::with(['employee.bank','otherSalary'])
             ->where('id', $id)
             ->first();
 
@@ -174,7 +176,7 @@ class FolderSalaryController extends Controller
             ->get();
 
         $otherSalary = SalaryDetail::with('otherSalary')
-            ->where('id', $id)
+            ->where('folder_id', $id)
             ->get();
 
         $data = [];
@@ -182,27 +184,46 @@ class FolderSalaryController extends Controller
         $data['salaryDetail'] = $salaryDetail;
         $data['salaryList'] = $salaryList;
         $data['otherSalary'] = $otherSalary;
+//        $otherSalary = DB::table('other_salary')
+//            ->get();
 
-
-//        dd($request);
-
-//        $employee_id =$otherSalary ->id;
-
-//        foreach ($request->other as $other) {
-//            $otherSalary = new OtherSalary;
-//            $otherSalary->employee_id = $employee_id;
-//            $otherSalary->amount = $other["amount"];
-//            $otherSalary->detail = $other["detail"];
-//            $otherSalary->type = $other["type"];
-//        }
-dd($otherSalary);
         return view('salarys.edit', $data);
+
+    }
+
+    public function salaryEdit(Request $request, $id)
+    {
+
+        SalaryDetail::where('id', $id)->update(
+            [
+                'note' => $request->note,
+                'rate' => $request->rate,
+                'rate_time' => $request->rate_time,
+                'sum_ot' => $request->sum_ot,
+                'note' => $request->note,
+                'total' => $request->net
+            ]
+        );
+
+        OtherSalary::where('folder_id',$id)->delete();
+        foreach ($request->other as $other) {
+            $otherSalary = new OtherSalary;
+            $otherSalary->folder_id = $id;
+            $otherSalary->type = $other['type'];
+            $otherSalary->detail = $other['detail'];
+            $otherSalary->amount = $other['amount'];
+            $otherSalary->save();
+        }
+
+
+        $salaryQuery = SalaryDetail::where('id', $id)->first();
+        return redirect('/salaryList/' . $salaryQuery->folder_id);
 
     }
 
     public function updateStatusPayMent(Request $request)
     {
-        SalaryDetail::where('id',$request->id)->update(['payment_status' => $request->status]);
+        SalaryDetail::where('id', $request->id)->update(['payment_status' => $request->status]);
     }
 
 }

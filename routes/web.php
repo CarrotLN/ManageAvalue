@@ -24,7 +24,8 @@ Route::resource('salarys','FolderSalaryController');
 
 Route::get('salaryList/{id}','FolderSalaryController@salaryList');
 
-Route::get('salaryEdit/{id}','FolderSalaryController@salaryEdit');
+Route::get('salaryEdit/{id}','FolderSalaryController@salaryDetail');
+Route::post('salary/{id}/update','FolderSalaryController@salaryEdit');
 
 Route::post('salary_update_status','FolderSalaryController@updateStatusPayMent');
 

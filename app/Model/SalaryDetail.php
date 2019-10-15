@@ -19,7 +19,7 @@ class SalaryDetail extends Model
         return $this->belongsTo(Employee::class,"employee_id","id");
     }
     public function otherSalary(){
-        return $this->belongsTo(OtherSalary::class,"employee_id","id");
+        return $this->hasMany(OtherSalary::class,"folder_id","id");
     }
     public function folderSalary(){
         return $this->belongsTo(FolderSalary::class,"folder_id","id");
